@@ -5,6 +5,11 @@ import sys
 import os
 import pip
 
+try:
+	import nmap
+except ImportError:
+	print("WARNING: moudle nmap is not installed, please install it first.");
+
 #################################################
 # This is a sip scanner that uses nmap library  #
 # to check an availability of a remote sip host,#
