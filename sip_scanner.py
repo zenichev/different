@@ -18,6 +18,14 @@ except ImportError:
 # ./sip_scanner <host> <port>                   #
 #################################################
 
+#################################################
+# You might as well add this command to global  #
+# aliasing(linux) in this file /etc/bash.bashrc:#
+# alias sipscan='/usr/local/sbin/sip_scanner.py'#
+# To use it as root, like: bash> sudo sipscan   #
+# add to your ~/.bashrc file: alias sudo='sudo '#
+#################################################
+
 def main():
 	global host
 	global port
