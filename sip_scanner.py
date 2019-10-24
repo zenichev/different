@@ -38,7 +38,9 @@ def main():
 	nm = nmap.PortScanner();
 
 	# check if TCP port opened
-	scanTCP(host, port)
+	result = scanTCP(host, port);
+	# check if host is down not to process any other checks further
+	ifHostDown(result);
 
 	# get host state
 	hostIsUP = nm['{0}'.format(host)].state()
@@ -67,6 +69,16 @@ def scanUDP(hostToScan,portToScan):
 def scanTCP(hostToScan,portToScan):
 	result = nm.scan('{0}'.format(hostToScan), arguments="-p {0}".format(portToScan))
 	return result
+
+def ifHostDown(result):
+	hostIsDown = result.get("nmap", "none").get("scanstats", "none").get("downhosts", "none")
+	if "1" in hostIsDown:
+		hostname = "Unknown"
+		hostIsUP = "Host is down"
+		tcpIsOpened = "Not scanned"
+		udpIsOpened = "Not scanned"
+		print("\nHostname: {0}\nHost state: {1}\nTCP {2} opened: {3}\nUDP {4} opened: {5}".format(hostname,hostIsUP,port,tcpIsOpened,port,udpIsOpened) );
+		sys.exit(0);
 
 def install(package):
 	if hasattr(pip, 'main'):
