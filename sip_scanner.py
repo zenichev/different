@@ -1,9 +1,13 @@
 #!/usr/bin/python
 # Imports
-import nmap
 import sys
 import os
-import pip
+import subprocess
+
+try:
+	import pip
+except ImportError:
+	print("WARNING: moudle pip is not installed, in case you don't have nmap installed, automatic installation cannot be performed.");
 
 try:
 	import nmap
@@ -18,21 +22,14 @@ except ImportError:
 # ./sip_scanner <host> <port>                   #
 #################################################
 
-#################################################
-# You might as well add this command to global  #
-# aliasing(linux) in this file /etc/bash.bashrc:#
-# alias sipscan='/usr/local/sbin/sip_scanner.py'#
-# To use it as root, like: bash> sudo sipscan   #
-# add to your ~/.bashrc file: alias sudo='sudo '#
-#################################################
-
 def main():
 	global host
 	global port
 	global nm
 	global udpIsOpened
 
-	# check if python-nmap is installed
+	# check if python-nmap and python-pip are installed
+	isPackageInstalled("pip");
 	isPackageInstalled("nmap");
 
 	try:
@@ -111,7 +108,15 @@ def isPackageInstalled(package):
 			print("NOTICE: please install python-{0} and get back to us!".format(package));
 			sys.exit(1);
 		if result == "yes":
-			install("python-{0}".format(package));
+			if "pip" in package:
+				if os.geteuid()!=0:
+					print("WARNING: you are installing pip without a root permission, run as root!");
+					sys.exit(1);
+				returned_value = subprocess.call("apt-get install python-pip -y", shell=True)
+				print("NOTICE: Please recall the script now again!");
+				sys.exit(1);
+			else:
+				install("python-{0}".format(package));
 
 if __name__ == "__main__":
 	main()
