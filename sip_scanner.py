@@ -14,6 +14,11 @@ try:
 except ImportError:
 	print("WARNING: moudle nmap is not installed, please install it first.");
 
+#############################################
+# Attention: For better quality of the scan #
+# please run this check under sudo rights!  #
+#############################################
+
 #################################################
 # This is a sip scanner that uses nmap library  #
 # to check an availability of a remote sip host,#
@@ -95,7 +100,10 @@ def ifHostDown(result):
 		hostIsUP = "Host is down"
 		tcpIsOpened = "Not scanned"
 		udpIsOpened = "Not scanned"
-		print("\nHostname: {0}\nHost state: {1}\nTCP {2} opened: {3}\nUDP {4} opened: {5}".format(hostname,hostIsUP,port,tcpIsOpened,port,udpIsOpened) );
+		if os.geteuid()==0:
+			print("\nHostname: {0}\nHost state: {1}\nTCP {2} opened: {3}\nUDP {4} opened: {5}".format(hostname,hostIsUP,port,tcpIsOpened,port,udpIsOpened) );
+		else:
+			print("Host state: Seems that host is down\nBut for better result please run check under sudo. Might be this host is up.");
 		sys.exit(0);
 
 def install(package):
